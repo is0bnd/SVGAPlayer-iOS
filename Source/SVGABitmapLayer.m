@@ -32,6 +32,15 @@
 }
 
 - (void)stepToFrame:(NSInteger)frame {
+    if (frame < self.frames.count) {
+        SVGAVideoSpriteFrameEntity *entity = self.frames[frame];
+        self.contentsCenter = entity.contentsCenter;
+        if (entity.contentsCenter.origin.x >= 1 && entity.contentsCenter.origin.y >= 1) {
+            self.contentsGravity = kCAGravityResizeAspect;
+        } else {
+            self.contentsGravity = kCAGravityResize;
+        }
+    }
 }
 
 @end

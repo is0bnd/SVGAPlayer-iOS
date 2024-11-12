@@ -49,11 +49,9 @@ static SVGAParser *parser;
                        @"https://cdn.jsdelivr.net/gh/svga/SVGA-Samples@master/posche.svga?raw=true",
                        @"https://cdn.jsdelivr.net/gh/svga/SVGA-Samples@master/rose.svga?raw=true",
                        ];
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 //    parser.enabledMemoryCache = YES;
     [parser parseWithURL:[NSURL URLWithString:items[arc4random() % items.count]]
          completionBlock:^(SVGAVideoEntity * _Nullable videoItem) {
-             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
              if (videoItem != nil) {
                  self.aPlayer.videoItem = videoItem;
                  NSMutableParagraphStyle *para = [[NSMutableParagraphStyle alloc] init];

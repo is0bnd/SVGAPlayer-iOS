@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "SVGACapInsets.h"
 
 @class SVGAVectorLayer;
 @class SVGAProtoFrameEntity;
@@ -21,8 +22,11 @@
 @property (nonatomic, readonly) CGFloat ny;
 @property (nonatomic, readonly) CALayer *maskLayer;
 @property (nonatomic, readonly) NSArray *shapes;
+@property (nonatomic, readonly) CGRect contentsCenter;
 
 - (instancetype)initWithJSONObject:(NSDictionary *)JSONObject;
 - (instancetype)initWithProtoObject:(SVGAProtoFrameEntity *)protoObject;
+
+- (void)scaleToSize:(CGSize)newSize oldSize: (CGSize)oldSize capInsets:(SVGACapInsets)insets;
 
 @end

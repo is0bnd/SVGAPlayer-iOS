@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSString *clipPath;
 @property (nonatomic, strong) CALayer *maskLayer;
 @property (nonatomic, strong) NSArray *shapes;
+@property (nonatomic, assign) CGRect contentsCenter;
 
 @end
 
@@ -133,6 +134,43 @@
         _maskLayer = [bezierPath createLayer];
     }
     return _maskLayer;
+}
+
+- (void)scaleToSize:(CGSize)newSize oldSize: (CGSize)oldSize capInsets:(SVGACapInsets)insets {
+    if (self.layout.size.width < 1 || self.layout.size.height < 1) { return; }
+    CGFloat contentsCenterX = 0.0;
+    CGFloat contentsCenterY = 0.0;
+    CGFloat minX = CGRectGetMinX(self.layout) + self.nx;
+    CGFloat maxX = CGRectGetMaxX(self.layout) + self.nx;
+    if (minX < insets.horizontal && maxX > insets.horizontal) {
+        contentsCenterX = (insets.horizontal - minX) / self.layout.size.width;
+        CGFloat width = newSize.width - oldSize.width + self.layout.size.width;
+        self.layout = CGRectMake(self.layout.origin.x, self.layout.origin.y, width, self.layout.size.height);
+    } else if (minX >= insets.horizontal) {
+        self.nx = newSize.width - oldSize.width + self.nx;
+    } else {
+        
+    }
+    
+    CGFloat minY = CGRectGetMinY(self.layout) + self.ny;
+    CGFloat maxY = CGRectGetMaxY(self.layout) + self.ny;
+    if (minY < insets.vertical && maxY > insets.vertical) {
+        contentsCenterY = (insets.vertical - minY) / self.layout.size.height;
+        CGFloat height = newSize.height - oldSize.height + self.layout.size.height;
+        self.layout = CGRectMake(self.layout.origin.x, self.layout.origin.y, self.layout.size.width, height);
+    } else if (minY >= insets.vertical) {
+        self.ny = newSize.height - oldSize.height + self.ny;
+    } else {
+        
+    }
+    
+    if (contentsCenterX != 0 || contentsCenterY != 0) {
+        CGFloat x = contentsCenterX ?: 1.0;
+        CGFloat y = contentsCenterY ?: 1.0;
+        CGFloat width = contentsCenterX == 0 ? 0.0 : 1.0 / self.layout.size.width;
+        CGFloat height = contentsCenterY == 0 ? 0.0 : 1.0 / self.layout.size.height;
+        self.contentsCenter = CGRectMake(x, y, width, height);
+    }
 }
 
 @end

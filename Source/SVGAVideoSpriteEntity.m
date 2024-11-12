@@ -71,4 +71,10 @@
     return layer;
 }
 
+- (void)scaleToSize:(CGSize)newSize oldSize: (CGSize)oldSize capInsets:(SVGACapInsets)insets {
+    [self.frames enumerateObjectsUsingBlock:^(SVGAVideoSpriteFrameEntity * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj scaleToSize:newSize oldSize:oldSize capInsets:insets];
+    }];
+}
+
 @end

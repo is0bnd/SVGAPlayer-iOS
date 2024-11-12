@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "SVGACapInsets.h"
 
 @class SVGAVideoEntity, SVGAVideoSpriteEntity, SVGAVideoSpriteFrameEntity, SVGABitmapLayer, SVGAVectorLayer, SVGAAudioEntity;
 @class SVGAProtoMovieEntity;
@@ -36,6 +37,10 @@
 - (void)saveCache:(NSString *)cacheKey;
 // NSMapTable弱缓存
 - (void)saveWeakCache:(NSString *)cacheKey;
+
+// 气泡缩放
+- (void)scaleToSize:(CGSize)size capInsets:(SVGACapInsets)insets;
+
 @end
 
 

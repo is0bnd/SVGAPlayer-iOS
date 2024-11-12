@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.homepage     = "http://code.yy.com/ued/SVGAPlayer"
   s.license      = "Apache 2.0"
   s.author       = { "PonyCui" => "cuiminghui1@yy.com" }
-  s.platform     = :ios, "7.0"
+  s.platform     = :ios, "13.0"
   s.source       = { :git => "https://github.com/svga/SVGAPlayer-iOS.git", :tag => s.version }
   s.subspec 'Core' do |ss|
     ss.source_files  = "Source/*.{h,m}"
@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   end
   s.subspec 'ProtoFiles' do |ss|
     ss.source_files  = "Source/pbobjc/*.{h,m}"
-    ss.requires_arc = false
+    ss.requires_arc = true
     ss.dependency 'Protobuf', '~> 3.4'
     ss.pod_target_xcconfig = {
       'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS=1',

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "SVGACapInsets.h"
 
 @class SVGAVideoSpriteFrameEntity, SVGAContentLayer;
 @class SVGAProtoSpriteEntity;
@@ -22,5 +23,7 @@
 - (instancetype)initWithProtoObject:(SVGAProtoSpriteEntity *)protoObject;
 
 - (SVGAContentLayer *)requestLayerWithBitmap:(UIImage *)bitmap;
+
+- (void)scaleToSize:(CGSize)newSize oldSize: (CGSize)oldSize capInsets:(SVGACapInsets)insets;
 
 @end

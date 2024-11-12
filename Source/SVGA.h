@@ -12,6 +12,7 @@
 #import "SVGAImageView.h"
 #import "SVGAVideoEntity.h"
 #import "SVGAExporter.h"
+#import "SVGACapInsets.h"
 
 @interface SVGA : NSObject
 

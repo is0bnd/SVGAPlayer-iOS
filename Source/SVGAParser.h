@@ -7,12 +7,25 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SVGACapInsets.h"
 
 @class SVGAVideoEntity;
 
 @interface SVGAParser : NSObject
 
 @property (nonatomic, assign) BOOL enabledMemoryCache;
+
+- (void)parseWithURL:(nonnull NSURL *)URL
+                size:(CGSize)size
+           capInsets:(SVGACapInsets)capInsets
+     completionBlock:(void ( ^ _Nonnull )(SVGAVideoEntity * _Nullable videoItem))completionBlock
+        failureBlock:(void ( ^ _Nullable)(NSError * _Nullable error))failureBlock;
+
+- (void)parseWithFilePath:(nonnull NSString *)path
+                     size:(CGSize)size
+                capInsets:(SVGACapInsets)capInsets
+          completionBlock:(void ( ^ _Nonnull )(SVGAVideoEntity * _Nullable videoItem))completionBlock
+             failureBlock:(void ( ^ _Nullable)(NSError * _Nullable error))failureBlock;
 
 - (void)parseWithURL:(nonnull NSURL *)URL
      completionBlock:(void ( ^ _Nonnull )(SVGAVideoEntity * _Nullable videoItem))completionBlock

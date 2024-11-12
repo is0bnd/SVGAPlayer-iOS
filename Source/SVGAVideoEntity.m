@@ -233,6 +233,14 @@ static dispatch_semaphore_t videoSemaphore;
     dispatch_semaphore_signal(videoSemaphore);
 }
 
+- (void)scaleToSize:(CGSize)size capInsets:(SVGACapInsets)insets {
+    CGSize oldSize = self.videoSize;
+    self.videoSize = size;
+    [self.sprites enumerateObjectsUsingBlock:^(SVGAVideoSpriteEntity * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj scaleToSize:size oldSize:oldSize capInsets:insets];
+    }];
+}
+
 @end
 
 @interface SVGAVideoSpriteEntity()

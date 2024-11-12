@@ -23,12 +23,42 @@
 
 static NSOperationQueue *parseQueue;
 static NSOperationQueue *unzipQueue;
+static NSOperationQueue *scaleQueue;
 
 + (void)load {
     parseQueue = [NSOperationQueue new];
     parseQueue.maxConcurrentOperationCount = 8;
+    scaleQueue = [NSOperationQueue new];
+    scaleQueue.maxConcurrentOperationCount = 8;
     unzipQueue = [NSOperationQueue new];
     unzipQueue.maxConcurrentOperationCount = 1;
+}
+
+- (void)parseWithFilePath:(nonnull NSString *)path
+                     size:(CGSize)size
+                capInsets:(SVGACapInsets)capInsets
+          completionBlock:(void ( ^ _Nonnull )(SVGAVideoEntity * _Nullable videoItem))completionBlock
+             failureBlock:(void ( ^ _Nullable)(NSError * _Nullable error))failureBlock {
+    NSURL *url = [NSURL fileURLWithPath:path];
+    [self parseWithURL:url size:size capInsets:capInsets completionBlock:completionBlock failureBlock:failureBlock];
+}
+
+- (void)parseWithURL:(nonnull NSURL *)URL
+                size:(CGSize)size
+           capInsets:(SVGACapInsets)capInsets
+     completionBlock:(void ( ^ _Nonnull )(SVGAVideoEntity * _Nullable videoItem))completionBlock
+        failureBlock:(void ( ^ _Nullable)(NSError * _Nullable error))failureBlock {
+    NSURLRequest *request = [NSURLRequest requestWithURL:URL cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:20.0];
+    [self parseWithURLRequest:request completionBlock:^(SVGAVideoEntity * _Nullable videoItem) {
+        [scaleQueue addOperationWithBlock:^{
+            [videoItem scaleToSize:size capInsets:capInsets];
+            if(completionBlock) {
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    completionBlock(videoItem);
+                }];
+            }
+        }];
+    } failureBlock:failureBlock];
 }
 
 - (void)parseWithURL:(nonnull NSURL *)URL
@@ -137,7 +167,7 @@ static NSOperationQueue *unzipQueue;
                 if (self.enabledMemoryCache) {
                     [videoItem saveCache:cacheKey];
                 } else {
-                    [videoItem saveWeakCache:cacheKey];
+                    // [videoItem saveWeakCache:cacheKey];
                 }
                 if (completionBlock) {
                     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -165,7 +195,7 @@ static NSOperationQueue *unzipQueue;
                     if (self.enabledMemoryCache) {
                         [videoItem saveCache:cacheKey];
                     } else {
-                        [videoItem saveWeakCache:cacheKey];
+                        //[videoItem saveWeakCache:cacheKey];
                     }
                     if (completionBlock) {
                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -228,7 +258,7 @@ static NSOperationQueue *unzipQueue;
                 if (self.enabledMemoryCache) {
                     [videoItem saveCache:cacheKey];
                 } else {
-                    [videoItem saveWeakCache:cacheKey];
+                    //[videoItem saveWeakCache:cacheKey];
                 }
                 if (completionBlock) {
                     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -285,7 +315,7 @@ static NSOperationQueue *unzipQueue;
                                 if (self.enabledMemoryCache) {
                                     [videoItem saveCache:cacheKey];
                                 } else {
-                                    [videoItem saveWeakCache:cacheKey];
+                                    //[videoItem saveWeakCache:cacheKey];
                                 }
                                 if (completionBlock) {
                                     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -313,7 +343,7 @@ static NSOperationQueue *unzipQueue;
                                     if (self.enabledMemoryCache) {
                                         [videoItem saveCache:cacheKey];
                                     } else {
-                                        [videoItem saveWeakCache:cacheKey];
+                                        //[videoItem saveWeakCache:cacheKey];
                                     }
                                     if (completionBlock) {
                                         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -360,6 +390,8 @@ static NSOperationQueue *unzipQueue;
     return [cacheDir stringByAppendingFormat:@"/%@", cacheKey];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (NSString *)MD5String:(NSString *)str {
     const char *cstr = [str UTF8String];
     unsigned char result[16];
@@ -372,6 +404,7 @@ static NSOperationQueue *unzipQueue;
             result[12], result[13], result[14], result[15]
             ];
 }
+#pragma clang diagnostic pop
 
 - (NSData *)zlibInflate:(NSData *)data
 {

@@ -363,7 +363,10 @@ static NSOperationQueue *unzipQueue;
 - (NSString *)MD5String:(NSString *)str {
     const char *cstr = [str UTF8String];
     unsigned char result[16];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     CC_MD5(cstr, (CC_LONG)strlen(cstr), result);
+#pragma clang diagnostic pop
     return [NSString stringWithFormat:
             @"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
             result[0], result[1], result[2], result[3],
